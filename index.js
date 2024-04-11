@@ -15,6 +15,9 @@ const logger = require("./modules/logger.js");
 // or `bot.something`, this is what we're referring to. Your client.
 const client = new Client({ intents, partials });
 
+//Le token du bot.
+const token = process.env.DISCORD_TOKEN
+
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.
 const commands = new Collection();
@@ -83,7 +86,7 @@ const init = async () => {
   client.on("threadCreate", (thread) => thread.join());
 
   // Here we login the client.
-  client.login();
+  client.login(token);
 
 // End top-level async/await function.
 };

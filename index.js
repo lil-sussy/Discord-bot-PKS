@@ -16,7 +16,7 @@ const logger = require("./modules/logger.js");
 const client = new Client({ intents, partials });
 
 //Le token du bot.
-const token = process.env.DISCORD_TOKEN
+const token = process.env.DISCORD_TOKEN;
 
 // Aliases, commands and slash commands are put in collections where they can be
 // read from, catalogued, listed, etc.

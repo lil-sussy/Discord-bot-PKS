@@ -13,7 +13,7 @@ exports.run = async (client, interaction) => {
   // Make sure the channel exists
   if (!confessionChannel) {
     console.error("The anonymous confession channel was not found!");
-    await interaction.reply({ content: "Aie, une erreur s'est produite.", ephemeral: true });
+    await interaction.reply({ content: "Malaise, une erreur s'est produite!", ephemeral: true });
     return;
   }
 
@@ -27,24 +27,26 @@ exports.run = async (client, interaction) => {
   confessionChannel.send({embeds : [embed]})
     .then(() => {
       // Confirm to the user that their confession has been posted (only they can see this)
-      interaction.reply({ content: "Ta confession a bien été postée !", ephemeral: true });
+      interaction.reply({ content: "Ta confesswion a bwien éwé postwée /ᐠ≽•ヮ•≼マ !", ephemeral: true });
     })
     .catch(error => {
       console.error("Error sending message: ", error);
-      interaction.reply({ content: "Aie, une erreur s'est produite.", ephemeral: true });
+      interaction.reply({ content: "Malaise, une ewweur s'est produitwe. /ᐠﹷ ‸ ﹷ ᐟﾉ", ephemeral: true });
     });
 };
 
 exports.commandData = {
-  name: "confession",
-  description: "Poste ta confession anonymement",
-  options: [{
-    name : "confession",
-    type : 3,
-    required : true,
-    description : "Le message secret hihi ^^"
-  }],
-  defaultPermission: true,
+	name: "confession",
+	description: "Poste ta confession anonymement !!",
+	options: [
+		{
+			name: "confession",
+			type: 3,
+			required: true,
+			description: "Le message secwet hihi ₍^⸝⸝> ·̫ <⸝⸝ ^₎",
+		},
+	],
+	defaultPermission: true,
 };
 
 // Set guildOnly to true if you want it to be available on guilds only.

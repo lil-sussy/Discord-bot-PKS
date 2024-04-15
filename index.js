@@ -2,93 +2,65 @@
 // Node version, if it isn't it will throw the following error to inform
 // you.
 if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 16.x or higher is required. Update Node on your system.");
-require("dotenv").config();
 
-// Load up the discord.js library
+
 const { Client, Collection } = require("discord.js");
-// We also load the rest of the things we need in this file:
-const { readdirSync } = require("fs");
-const { intents, partials, permLevels } = require("./config.js");
-const logger = require("./modules/logger.js");
-// This is your client. Some people call it `bot`, some people call it `self`,
-// some might call it `cootchie`. Either way, when you see `client.something`,
-// or `bot.something`, this is what we're referring to. Your client.
-const client = new Client({ intents, partials });
+const fs = require("fs");
+const path = require("node:path");
 
-//Le token du bot.
-const token = process.env.DISCORD_TOKEN;
 
-// Aliases, commands and slash commands are put in collections where they can be
-// read from, catalogued, listed, etc.
-const commands = new Collection();
-const aliases = new Collection();
-const slashcmds = new Collection();
+// On cree une instance de notre client 
+const client = new Client({
+    intents : []
+});
 
-// Generate a cache of client permissions for pretty perm names in commands.
-const levelCache = {};
-for (let i = 0; i < permLevels.length; i++) {
-  const thisLevel = permLevels[i];
-  levelCache[thisLevel.name] = thisLevel.level;
-}
+client.commands = new Collection();
 
-// To reduce client pollution we'll create a single container property
-// that we can attach everything we need to.
-client.container = {
-  commands,
-  aliases,
-  slashcmds,
-  levelCache
-};
+// Initialisation du .env
+// C'est dans ce fichier que devrait se trouver le token du bot.
+require("dotenv").config();
+const token = process.env.DISCORD_TOKEN; //Et voila le token en question
 
-// We're doing real fancy node 8 async/await stuff here, and to do that
-// we need to wrap stuff in an anonymous function. It's annoying but it works.
 
 const init = async () => {
 
-  // Here we load **commands** into memory, as a collection, so they're accessible
-  // here and everywhere else.
-  const commands = readdirSync("./commands/").filter(file => file.endsWith(".js"));
-  for (const file of commands) {
-    const props = require(`./commands/${file}`);
-    logger.log(`Loading Command: ${props.help.name}. 👌`, "log");
-    client.container.commands.set(props.help.name, props);
-    props.conf.aliases.forEach(alias => {
-      client.container.aliases.set(alias, props.help.name);
-    });
-  }
+    // Lire les commandes
+    const commandPath = path.join(__dirname, 'commands');
+    const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith(".js"));
 
-  // Now we load any **slash** commands you may have in the ./slash directory.
-  const slashFiles = readdirSync("./slash").filter(file => file.endsWith(".js"));
-  for (const file of slashFiles) {
-    const command = require(`./slash/${file}`);
-    const commandName = file.split(".")[0];
-    logger.log(`Loading Slash command: ${commandName}. 👌`, "log");
-    
-    // Now set the name of the command with it's properties.
-    client.container.slashcmds.set(command.commandData.name, command);
-  }
+    for (file of commandFiles){
 
-  // Then we load events, which will include our message and ready event.
-  const eventFiles = readdirSync("./events/").filter(file => file.endsWith(".js"));
-  for (const file of eventFiles) {
-    const eventName = file.split(".")[0];
-    logger.log(`Loading Event: ${eventName}. 👌`, "log");
-    const event = require(`./events/${file}`);
-    // Bind the client to any event, before the existing arguments
-    // provided by the discord.js event. 
-    // This line is awesome by the way. Just sayin'.
-    client.on(eventName, event.bind(null, client));
-  }  
+        const filePath = path.join(commandPath, file);
+        const command = require(filePath);
 
-  // Threads are currently in BETA.
-  // This event will fire when a thread is created, if you want to expand
-  // the logic, throw this in it's own event file like the rest.
-  client.on("threadCreate", (thread) => thread.join());
+        // Set a new item in the Collection with the key as the command name and the value as the exported module
+        if ('data' in command && 'execute' in command) {
+            client.commands.set(command.data.name, command);
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+        } 
+    }
 
-  // Here we login the client.
-  client.login(token);
 
-// End top-level async/await function.
+
+    //Lire les events
+    const eventPath = path.join(__dirname, 'events');
+    const eventFiles = fs.readdirSync(eventPath).filter(file => file.endsWith(".js"));
+
+    for(const file of eventFiles){
+        const filePath = path.join(eventPath, file);
+        const event = require(filePath);
+
+        if(event.once){
+            client.once(event.name, (...args) => event.execute(...args));
+        } else {
+            client.on(event.name, (...args) => event.execute(...args));
+        }
+
+    }
+
+    // Et pour finir, on lance Kookie :D
+    client.login(token);
 };
 
 init();

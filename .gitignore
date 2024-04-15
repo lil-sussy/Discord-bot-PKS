@@ -7,7 +7,6 @@ yarn-error.log*
 config.json
 config.js
 data/
-test.js
 
 # Runtime data
 pids
@@ -45,9 +44,6 @@ typings/
 
 # Optional npm cache directory
 .npm
-
-# Optional eslint cache
-.eslintcache
 
 # Optional REPL history
 .node_repl_history

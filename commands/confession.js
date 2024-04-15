@@ -7,7 +7,8 @@ module.exports = {
                 .addStringOption(option => 
                             option.setName("confession")
                                 .setDescription("Le message à poster anonymement hihi ^^")
-                                .setRequired(true)),
+                                .setRequired(true)
+                                .setMaxLength(1000)),
     
         async execute(interaction){
 
@@ -36,13 +37,20 @@ module.exports = {
                 return;
             }
 
+            // Une autre expression reguliere, qui checke si le message mentionne quelqu'un.
+            // Si il mentionne qqun, pas posté. Politique de la maison, deso deso.
+            const mentionInMessage = /^.*(<@[0-9]{18}>).*$/
+            if (mentionInMessage.test(confession)){
+                interaction.reply({content: "Mentionner des personnes dans tes messages anonymes n'est pas autorisé.", ephemeral: true});
+                return;
+            }
 
             // On cree un joli embed pour mettre la confession dedans
             const embed = new EmbedBuilder()
-                            .setTitle("Confession")
-                            .setDescription(confession)
+                            .setTitle("Confession anonyme °")
+                            .setDescription(` - "`+ confession + `"`)
                             .setColor("#cc00f5")
-                            //.setFooter({text : "55644546545"});
+                            .setFooter({text : "❗ Si ce message est inapproprié, veuillez contacter la modération PKS le plus vite possible."});
 
             // Puis on poste le message !
             confessionChannel.send({embeds : [embed]})

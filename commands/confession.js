@@ -28,13 +28,23 @@ module.exports = {
                 return;
             }
 
+            // Une expression reguliere, qui checke si un message contient un URL.
+            // Si le message contient bien un URL, il n'est pas posté. Regles de la maison, deso deso.
+            const URLInMessage = /^(.*(?:https?|ftp):\/\/).*$/;
+            if(URLInMessage.test(confession)){
+                interaction.reply({content: "Inclure des liens dans tes messages anonymes n'est pas autorisé.", ephemeral: true});
+                return;
+            }
+
+
+            // On cree un joli embed pour mettre la confession dedans
             const embed = new EmbedBuilder()
                             .setTitle("Confession")
                             .setDescription(confession)
                             .setColor("#cc00f5")
                             //.setFooter({text : "55644546545"});
 
-            // Send the confession to the anonymous confession channel
+            // Puis on poste le message !
             confessionChannel.send({embeds : [embed]})
             .then(() => {
                 // Confirm to the user that their confession has been posted (only they can see this)

@@ -3,7 +3,7 @@ const fs = require('node:fs');
 
 require('dotenv').config();
 const token = process.env.DISCORD_TOKEN;
-const client_id = process.env.CLIENT_ID;
+const client_id = process.env.DISCORD_APP_ID;
 
 
 const commands = [];

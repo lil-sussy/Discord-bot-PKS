@@ -1,19 +1,51 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
+const admin = require("firebase-admin");
+const serviceAccount = require("../firebase.json");
+serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
+
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+});
+
+
+const db = admin.firestore();
+const counterRef = db.collection("counters").doc("confessions");
+
+const initCounter = async () => {
+	const counterDoc = await counterRef.get();
+	if (!counterDoc.exists) {
+		await counterRef.set({ count: 0 });
+		console.log("Counter initialized in Firestore.");
+	} else {
+		console.log("Counter already initialized.");
+	}
+};
+initCounter()
+// Run a transaction to increment the counter
+
+
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("confession")
-		.setDescription("Fais une confession anonyme.")
-		.addStringOption((option) => option.setName("confession").setDescription("Le message à poster anonymement hihi ^^").setRequired(true)),
-
+  .setName("confession")
+  .setDescription("Fais une confession anonyme.")
+  .addStringOption((option) => option.setName("confession").setDescription("Le message à poster anonymement hihi ^^").setRequired(true)),
+  
 	execute: async (interaction) => {
-		// On recupere le texte de la confession
+    // On recupere le texte de la confession
 		const confession = interaction.options.getString("confession");
+    let count = 1;
+		await db.runTransaction(async (transaction) => {
+			const counterDoc = await transaction.get(counterRef);
+			// We will declare newCount here so it's available inside this block
+			count = (counterDoc.exists && counterDoc.data().count ? counterDoc.data().count : 0) + 1;
+			transaction.set(counterRef, { count: count });
+		});
 
 		// L'Id du channel ou l'on poste la confession.
 		// Pour l'instant, pointe vers le channel #dev-task-force. C'est temporaire, evidemment, et faudra changer l'id quand on aura fini.
 		const confessionChannelId = "1227954337603653652";
-
+    
 		// Fetch the channel from the client's channels cache
 		const confessionChannel = interaction.client.channels.cache.get(confessionChannelId) ?? (await interaction.client.channels.fetch(confessionChannelId));
 
@@ -33,7 +65,10 @@ module.exports = {
 		}
 
 		// On cree un joli embed pour mettre la confession dedans
-		const embed = new EmbedBuilder().setTitle("Confession").setDescription(confession).setColor("#cc00f5");
+		const embed = new EmbedBuilder()
+			.setTitle("Confession anonyme n°" + count)
+			.setDescription(confession)
+			.setColor("#cc00f5");
 		//.setFooter({text : "55644546545"});
 
 		// Puis on poste le message !

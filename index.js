@@ -63,4 +63,5 @@ const init = async () => {
     client.login(token);
 };
 
+exports.client = client;
 init();

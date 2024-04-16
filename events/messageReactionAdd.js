@@ -1,15 +1,14 @@
-const { Events } = require('discord.js');
+const { Events, EmbedBuilder } = require('discord.js');
 
 require("dotenv").config();
 const client_id = process.env.DISCORD_APP_ID;
 
-const REACTION_LIMIT = 1; // Temporaire, choisi arbitrairement, ouais, a changer donc.
+const REACTION_LIMIT = 2; // Temporaire, choisi arbitrairement, ouais, a changer donc.
 
 module.exports = {
     name : Events.MessageReactionAdd,
 
     execute : async (reaction, user) => {
-        console.log("REAACTION");
         
         //1ere etape : on recupere le message sur lequel on a rajoute une reaction
         const message = reaction.message;
@@ -35,8 +34,14 @@ module.exports = {
         if (emoji.name !== '🚫')  return;
 
         if (reaction.count >= REACTION_LIMIT){
-            await message.delete();
-            await message.channel.send("yop yop supprimado");
+            const oldEmbed = message.embeds[0];     
+
+            const newEmbed = new EmbedBuilder()
+                .setTitle(oldEmbed.title)
+                .setDescription("*Cette confession a été supprimée*")
+                .setColor(oldEmbed.color);
+            await message.edit({embeds : [newEmbed] });
+            
         }
 
 

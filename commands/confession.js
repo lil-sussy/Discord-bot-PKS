@@ -77,7 +77,9 @@ module.exports = {
 			.setTitle("Confession anonyme n°" + count)
 			.setDescription(` - "` + confession + `"`)
 			.setColor("#cc00f5")
-			.setFooter({ text: "❗ Si ce message est inapproprié, veuillez contacter la modération PKS le plus vite possible." });
+			.setFooter({ text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message." });
+
+		const message = await confessionChannel.send({ embeds: [embed] });
 
 		// Puis on poste le message !
 		confessionChannel

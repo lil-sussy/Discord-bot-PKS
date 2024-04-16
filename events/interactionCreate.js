@@ -1,6 +1,5 @@
 const { Events } = require('discord.js')
 
-
 // L'event InteractionCreate.
 // A chaque fois que quelqu'un fait une commande avec le bot, ce script est execute.
 // Son principe est simple : On verifie que la /commande qui a ete faite existe bien, et si c'est le cas, on l'execute. Sinon on renvoie une erreur.

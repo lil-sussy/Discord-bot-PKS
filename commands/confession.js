@@ -33,6 +33,7 @@ module.exports = {
 	execute: async (interaction) => {
 		// On recupere le texte de la confession
 		const confession = interaction.options.getString("confession");
+		
 		let count = 1;
 		await db.runTransaction(async (transaction) => {
 			const counterDoc = await transaction.get(counterRef);

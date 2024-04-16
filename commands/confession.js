@@ -34,13 +34,13 @@ module.exports = {
 		// On recupere le texte de la confession
 		const confession = interaction.options.getString("confession");
 		
-		// let count = 1;
-		// await db.runTransaction(async (transaction) => {
-		// 	const counterDoc = await transaction.get(counterRef);
-		// 	// We will declare newCount here so it's available inside this block
-		// 	count = (counterDoc.exists && counterDoc.data().count ? counterDoc.data().count : 0) + 1;
-		// 	transaction.set(counterRef, { count: count });
-		// });
+		let count = 1;
+		await db.runTransaction(async (transaction) => {
+			const counterDoc = await transaction.get(counterRef);
+			// We will declare newCount here so it's available inside this block
+			count = (counterDoc.exists && counterDoc.data().count ? counterDoc.data().count : 0) + 1;
+			transaction.set(counterRef, { count: count });
+		});
 
 		// L'Id du channel ou l'on poste la confession.
 		// Pour l'instant, pointe vers le channel #dev-task-force. C'est temporaire, evidemment, et faudra changer l'id quand on aura fini.
@@ -56,7 +56,7 @@ module.exports = {
 			return;
 		}
 		
-		const count = (await getNumero(confessionChannel)) + 1;
+		//const count = (await getNumero(confessionChannel)) + 1;
 
 		// Une expression reguliere, qui checke si un message contient un URL.
 		// Si le message contient bien un URL, il n'est pas posté. Regles de la maison, deso deso.

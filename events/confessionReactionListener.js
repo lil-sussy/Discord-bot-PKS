@@ -1,5 +1,7 @@
 const client = require("../index.js").client;
 
+const REATION_LIMIT = 2;
+
 client.on("messageReactionAdd", async (reaction, user) => {
 	// Ensure the reaction is not from a bot and is in the correct channel
 	if (user.bot) return;
@@ -14,7 +16,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 				await reaction.fetch();
 
 				// If the reactions count reaches 6, delete the message
-				if (reaction.count >= 6) {
+				if (reaction.count >= REATION_LIMIT) {
 					const confessionNumber = reaction.message.embeds[0]?.title.split("°")[1] || "unknown";
 					await reaction.message.delete();
 					await reaction.message.channel.send(`Confession numéro ${confessionNumber} a bien été supprimée.`);

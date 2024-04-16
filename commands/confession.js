@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, GuildChannel } = require("discord.js");
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase.json");
@@ -34,13 +34,13 @@ module.exports = {
 		// On recupere le texte de la confession
 		const confession = interaction.options.getString("confession");
 		
-		let count = 1;
-		await db.runTransaction(async (transaction) => {
-			const counterDoc = await transaction.get(counterRef);
-			// We will declare newCount here so it's available inside this block
-			count = (counterDoc.exists && counterDoc.data().count ? counterDoc.data().count : 0) + 1;
-			transaction.set(counterRef, { count: count });
-		});
+		// let count = 1;
+		// await db.runTransaction(async (transaction) => {
+		// 	const counterDoc = await transaction.get(counterRef);
+		// 	// We will declare newCount here so it's available inside this block
+		// 	count = (counterDoc.exists && counterDoc.data().count ? counterDoc.data().count : 0) + 1;
+		// 	transaction.set(counterRef, { count: count });
+		// });
 
 		// L'Id du channel ou l'on poste la confession.
 		// Pour l'instant, pointe vers le channel #dev-task-force. C'est temporaire, evidemment, et faudra changer l'id quand on aura fini.
@@ -48,13 +48,15 @@ module.exports = {
 
 		// Fetch the channel from the client's channels cache
 		const confessionChannel = interaction.client.channels.cache.get(confessionChannelId) ?? (await interaction.client.channels.fetch(confessionChannelId));
-
+		
 		// Make sure the channel exists
 		if (!confessionChannel) {
 			console.error("Le channyew de confesswiwon n'a pas été twouvé !!!! ฅ(=＾◕ᆺ◕＾=)ฅ");
 			await interaction.reply({ content: "Aie, une ewweur s'est pwoduite!!!!! ฅ^•ﻌ•^ฅ", ephemeral: true });
 			return;
 		}
+		
+		const count = (await getNumero(confessionChannel)) + 1;
 
 		// Une expression reguliere, qui checke si un message contient un URL.
 		// Si le message contient bien un URL, il n'est pas posté. Regles de la maison, deso deso.
@@ -79,16 +81,32 @@ module.exports = {
 			.setColor("#cc00f5")
 			.setFooter({ text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message." });
 
-		const message = await confessionChannel
+		confessionChannel
 			.send({ embeds: [embed] })
-			.then(() => {
+			.then((message) => {
 				// Confirm to the user that their confession has been posted (only they can see this)
 				interaction.reply({ content: "Ta confesswiwon a bwien été postwée ! (｡^•ㅅ•^｡)", ephemeral: true });
+				message.react("🚫");
 			})
 			.catch((error) => {
 				console.error("Ewwow sending messwage (❁˃́ᴗ˂̀)(≧ᴗ≦✿)", error);
 				interaction.reply({ content: "Aie, une ewweur s'est pwoduite. (❁˃́ᴗ˂̀)(≧ᴗ≦✿)", ephemeral: true });
 			});
-    await message.react("🚫");
 	},
 };
+
+/** Fonction getNumero
+ *  Va chercher la derniere confession postee dans le channel, et renvoie son numero.
+ * 
+ * @param {TextChannel} channel - le channel en question
+ * 
+ * @returns le numero trop cool et tout 
+ */
+async function getNumero(channel){
+	
+	// On recupere la derniere confession envoyee par le bot
+	const lastMessage = Array.from(await channel.messages.fetch({limit: 1, cache: false}))[0][1];
+	const title = lastMessage.embeds[0].title;
+
+	return parseInt(title.slice(-2));
+}

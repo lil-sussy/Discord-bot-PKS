@@ -4,14 +4,14 @@
 if (Number(process.version.slice(1).split(".")[0]) < 16) throw new Error("Node 16.x or higher is required. Update Node on your system.");
 
 
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const path = require("node:path");
 
 
 // On cree une instance de notre client 
 const client = new Client({
-    intents : []
+    intents : [ GatewayIntentBits.GuildMessageReactions ]
 });
 
 client.commands = new Collection();

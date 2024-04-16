@@ -79,10 +79,7 @@ module.exports = {
 			.setColor("#cc00f5")
 			.setFooter({ text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message." });
 
-		const message = await confessionChannel.send({ embeds: [embed] });
-
-		// Puis on poste le message !
-		confessionChannel
+		const message = await confessionChannel
 			.send({ embeds: [embed] })
 			.then(() => {
 				// Confirm to the user that their confession has been posted (only they can see this)
@@ -92,5 +89,6 @@ module.exports = {
 				console.error("Ewwow sending messwage (❁˃́ᴗ˂̀)(≧ᴗ≦✿)", error);
 				interaction.reply({ content: "Aie, une ewweur s'est pwoduite. (❁˃́ᴗ˂̀)(≧ᴗ≦✿)", ephemeral: true });
 			});
+    await message.react("🚫");
 	},
 };

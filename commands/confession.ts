@@ -26,9 +26,10 @@ initCounter()
 function flagColor(count: number): string {
 	const transFlag = ["#5BCEFA", "#F5A9B8", "#FFFFFF", "#F5A9B8", "#5BCEFA"];
 	const lgbtqFlag = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"];
+  const allFlags = transFlag.concat(lgbtqFlag);
 
 	// lets say we choose the lgbtqFlag flag
-	return lgbtqFlag[count % lgbtqFlag.length];
+	return allFlags[count % allFlags.length];
 };
 
 

@@ -43,7 +43,5 @@ module.exports = {
             await message.edit({embeds : [newEmbed] });
             
         }
-
-
     }
 }

@@ -88,12 +88,26 @@ export default {
 
 async function getNumero(channel: TextChannel) {
   // On recupere la derniere confession envoyee par le bot
-  const [[_, lastMessage]] = Array.from(await channel.messages.fetch({ limit: 1 }))
-  const {
-    embeds: [{ title }],
-  } = lastMessage
+  const lastMessages = Array.from(await channel.messages.fetch({ limit: 25 }))
 
-  return parseInt(title?.split('°').pop() ?? '🦊')
+  lastMessages.sort((a, b) => b[1].createdTimestamp - a[1].createdTimestamp)
+
+  const lastMessage = lastMessages.find(
+    ([_, message]) => message.author.id === process.env.DISCORD_APP_ID && message.embeds.length
+  )
+
+  if (!lastMessage) {
+    return 0
+  }
+
+  const [
+    _,
+    {
+      embeds: [{ title }],
+    },
+  ] = lastMessage
+
+  return parseInt(title?.split('°').pop() ?? '0')
 }
 
 function flagColor(count: number) {

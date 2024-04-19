@@ -3,7 +3,7 @@ const { Events, EmbedBuilder } = require('discord.js');
 require("dotenv").config();
 const client_id = process.env.DISCORD_APP_ID;
 
-const REACTION_LIMIT = 2; // Temporaire, choisi arbitrairement, ouais, a changer donc.
+const REACTION_LIMIT = 7; // Temporaire, choisi arbitrairement, ouais, a changer donc.
 
 module.exports = {
     name : Events.MessageReactionAdd,

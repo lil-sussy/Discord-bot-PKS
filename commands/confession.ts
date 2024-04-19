@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, GuildChannel } = require("discord.js"
 
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase.json");
-serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n");
+serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n");
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
@@ -23,6 +23,14 @@ const initCounter = async () => {
 initCounter()
 // Run a transaction to increment the counter
 
+function flagColor(count: number): string {
+	const transFlag = ["#5BCEFA", "#F5A9B8", "#FFFFFF", "#F5A9B8", "#5BCEFA"];
+	const lgbtqFlag = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"];
+
+	// lets say we choose the lgbtqFlag flag
+	return lgbtqFlag[count % lgbtqFlag.length];
+};
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -34,7 +42,7 @@ module.exports = {
 		// On recupere le texte de la confession
 		const confession = interaction.options.getString("confession");
 		
-		let count = 1;
+		let count:number  = 1;
 		await db.runTransaction(async (transaction) => {
 			const counterDoc = await transaction.get(counterRef);
 			// We will declare newCount here so it's available inside this block
@@ -78,7 +86,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setTitle("Confession anonyme n°" + count)
 			.setDescription(` - "` + confession + `"`)
-			.setColor("#cc00f5")
+			.setColor(flagColor(count))
 			.setFooter({ text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message." });
 
 		confessionChannel
@@ -95,6 +103,7 @@ module.exports = {
 	},
 };
 
+
 /** Fonction getNumero
  *  Va chercher la derniere confession postee dans le channel, et renvoie son numero.
  * 
@@ -105,7 +114,7 @@ module.exports = {
 async function getNumero(channel){
 	
 	// On recupere la derniere confession envoyee par le bot
-	const lastMessage = Array.from(await channel.messages.fetch({limit: 1, cache: false}))[0][1];
+	const lastMessage = (Array.from(await channel.messages.fetch({limit: 1, cache: false}))[0] as Array<typeof channel.messages[0]>)[1];
 	const title = lastMessage.embeds[0].title;
 
 	return parseInt(title.slice(-2));

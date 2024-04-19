@@ -64,12 +64,12 @@ export default {
 
     // On cree un joli embed pour mettre la confession dedans
     const embed = new EmbedBuilder()
-			.setTitle("Confession anonyme n°" + count)
-			.setDescription(` - "` + confession + `"`)
-			.setColor(flagColor(count))
-			.setFooter({
-				text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-			});
+      .setTitle('Confession anonyme n°' + count)
+      .setDescription(` - "` + confession + `"`)
+      .setColor(flagColor(count))
+      .setFooter({
+        text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
+      })
 
     try {
       const message = await confessionChannel.send({ embeds: [embed] })
@@ -93,14 +93,14 @@ async function getNumero(channel: TextChannel) {
     embeds: [{ title }],
   } = lastMessage
 
-  return parseInt(title?.slice(-2) ?? '🦊')
+  return parseInt(title?.split('°').pop() ?? '🦊')
 }
 
 function flagColor(count: number) {
-	const transFlag = [0x5BCEFA, 0xF5A9B8, 0xFFFFFF, 0xF5A9B8, 0x5BCEFA];
-	const lgbtqFlag = [0xE40303, 0xFF8C00, 0xFFED00, 0x008026, 0x24408E, 0x732982];
-  const allFlags = transFlag.concat(lgbtqFlag);
+  const transFlag = [0x5bcefa, 0xf5a9b8, 0xffffff, 0xf5a9b8, 0x5bcefa]
+  const lgbtqFlag = [0xe40303, 0xff8c00, 0xffed00, 0x008026, 0x24408e, 0x732982]
+  const allFlags = [...transFlag, ...lgbtqFlag]
 
-	// lets say we choose the lgbtqFlag flag
-	return allFlags[count % allFlags.length];
-};
+  // lets say we choose the lgbtqFlag flag
+  return allFlags[count % allFlags.length]
+}

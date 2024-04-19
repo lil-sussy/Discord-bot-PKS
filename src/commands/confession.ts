@@ -71,91 +71,10 @@ export default {
         text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
       })
 
-    // const embed = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#58c8f2')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed1 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#eda4b2')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed2 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#ffffff')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed3 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#eda4b2')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed4 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#58c8f2')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-
-    //!
-    // const embed = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#e60000')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed1 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#ff8e00')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed2 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#ffee00')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed3 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#00821b')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed4 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#004cff')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-    // const embed5 = new EmbedBuilder()
-    //   .setTitle('Confession anonyme n°' + count)
-    //   .setDescription(` - "` + confession + `"`)
-    //   .setColor('#790089')
-    //   .setFooter({
-    //     text: "❗ Si ce message est inapproprié, vous pouvez reagir avec l'emoji 🚫 pour supprimer le message.",
-    //   })
-
     try {
       const message = await confessionChannel.send({ embeds: [embed] })
 
       await message.react('🚫')
-      await message.react('🦊')
 
       // Confirm to the user that their confession has been posted (only they can see this)
       return await interaction.reply({ content: 'Ta confesswiwon a bwien été postwée ! (｡^•ㅅ•^｡)', ephemeral: true })

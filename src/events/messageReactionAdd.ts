@@ -1,7 +1,7 @@
 import type { MessageReaction, PartialMessageReaction, User, PartialUser } from 'discord.js'
 import { Events, EmbedBuilder } from 'discord.js'
 
-const REACTION_LIMIT = 2 // Temporaire, choisi arbitrairement, ouais, a changer donc.
+const REACTION_LIMIT = 6 // Temporaire, choisi arbitrairement, ouais, a changer donc.
 
 export default {
   name: Events.MessageReactionAdd,

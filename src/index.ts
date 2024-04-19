@@ -23,7 +23,9 @@ const token = process.env.DISCORD_TOKEN //Et voila le token en question
 const init = async () => {
   // Lire les commandes
   const commandPath = join(__dirname, 'commands')
-  const commandFiles = readdirSync(commandPath).filter((file) => file.endsWith('.ts'))
+  const commandFiles = readdirSync(commandPath).filter((file) =>
+    file.endsWith(process.env.NODE_ENV === 'production' ? '.js' : '.ts')
+  )
 
   for (const file of commandFiles) {
     const filePath = join(commandPath, file)
@@ -41,7 +43,9 @@ const init = async () => {
 
   //Lire les events
   const eventPath = join(__dirname, 'events')
-  const eventFiles = readdirSync(eventPath).filter((file) => file.endsWith('.ts'))
+  const eventFiles = readdirSync(eventPath).filter((file) =>
+    file.endsWith(process.env.NODE_ENV === 'production' ? '.js' : '.ts')
+  )
 
   for (const file of eventFiles) {
     const filePath = join(eventPath, file)

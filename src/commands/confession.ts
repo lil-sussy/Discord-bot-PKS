@@ -8,15 +8,15 @@ const confessionChannelId = process.env.CONFESSION_CHANNEL_ID
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('confession')
-    .setDescription('Fais une confesswiwon anyonwyme :3 (=🝦 ﻌ 🝦=)')
+    .setName('confess')
+    .setDescription('Fais une confession anonyme :3')
     .addStringOption((option) =>
-      option.setName('confession').setDescription('Le messawge à postew anyonymewment!!! (ฅ^•ﻌ•^ฅ)').setRequired(true)
+      option.setName('message').setDescription('Le message à poster anonymement hehehe').setRequired(true)
     ),
 
   execute: async (interaction) => {
     if (!interaction.inGuild()) {
-      return await interaction.reply({ content: "Aie, une ewweur s'est pwoduite!!!!! ฅ^•ﻌ•^ฅ", ephemeral: true })
+      return await interaction.reply({ content: "Aie, une erreur s'est produite >w<", ephemeral: true })
     }
 
     const guild = await interaction.client.guilds.fetch(interaction.guildId)
@@ -27,17 +27,19 @@ export default {
 
     // Make sure the channel exists
     if (!confessionChannel) {
-      console.error("Le channyew de confesswiwon n'a pas été twouvé !!!! ฅ(=＾◕ᆺ◕＾=)ฅ")
+      console.error("Le channel de confession n'a pas été trouvé.")
 
-      return await interaction.reply({ content: "Aie, une ewweur s'est pwoduite!!!!! ฅ^•ﻌ•^ฅ", ephemeral: true })
+      return await interaction.reply({ content: "Aie, une erreur s'est produite >w<", ephemeral: true })
     }
 
     if (confessionChannel.type !== ChannelType.GuildText) {
-      return await interaction.reply({ content: "Aie, une ewweur s'est pwoduite!!!!! ฅ^•ﻌ•^ฅ", ephemeral: true })
+      console.log("Pas le bon type")
+      console.log("ton channel il est de type", confessionChannel.type)
+      return await interaction.reply({ content: "Aie, une erreur s'est produite >w<", ephemeral: true })
     }
 
     // On recupere le texte de la confession
-    const confession = interaction.options.getString('confession') as string
+    const confession = interaction.options.getString('message') as string
 
     // Une expression reguliere, qui checke si un message contient un URL.
     // Si le message contient bien un URL, il n'est pas posté. Regles de la maison, deso deso.
@@ -45,7 +47,7 @@ export default {
 
     if (URLInMessage.test(confession)) {
       return await interaction.reply({
-        content: "Inclure des liens dans un messawge anyonyme n'est pas autowisé!!!!! (˶˃ᆺ˂˶)",
+        content: "Inclure des liens dans un message anonyme n'est pas autorisé.",
         ephemeral: true,
       })
     }
@@ -55,7 +57,7 @@ export default {
     const mentionInMessage = /^.*(<@[0-9]{18}>).*$/
     if (mentionInMessage.test(confession)) {
       return await interaction.reply({
-        content: "Mentionnew des pewsonnes dans tes messawges anyonymes n'est pas autowisé uwu ૮ ˶ᵔ ᵕ ᵔ˶ ა",
+        content: "Mentionner des personnes dans tes messages anonymes n'est pas autorisé ૮ ˶ᵔ ᵕ ᵔ˶ ა",
         ephemeral: true,
       })
     }
@@ -77,11 +79,11 @@ export default {
       await message.react('🚫')
 
       // Confirm to the user that their confession has been posted (only they can see this)
-      return await interaction.reply({ content: 'Ta confesswiwon a bwien été postwée ! (｡^•ㅅ•^｡)', ephemeral: true })
+      return await interaction.reply({ content: 'Ta confession a bien été postée !', ephemeral: true })
     } catch (error: any) {
       console.error('Ewwow sending messwage (❁˃́ᴗ˂̀)(≧ᴗ≦✿)', error)
 
-      return await interaction.reply({ content: "Aie, une ewweur s'est pwoduite. (❁˃́ᴗ˂̀)(≧ᴗ≦✿)", ephemeral: true })
+      return await interaction.reply({ content: "Aie, une erreur s'est produite :(", ephemeral: true })
     }
   },
 } as Command

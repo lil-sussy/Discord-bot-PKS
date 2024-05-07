@@ -11,7 +11,7 @@ export default {
     .setName('confess')
     .setDescription('Fais une confession anonyme :3')
     .addStringOption((option) =>
-      option.setName('message').setDescription('Le message à poster anonymement hehehe').setRequired(true)
+      option.setName('message').setDescription('Le message à poster anonymement').setRequired(true)
     ),
 
   execute: async (interaction) => {
